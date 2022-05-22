@@ -34,9 +34,17 @@ public class Main {
         List<String> workable = persons.stream() //Получить отсортированный по фамилии список потенциально работоспособных людей с высшим образованием в выборке
                 // (т.е. людей с высшим образованием от 18 до 60 лет для женщин и до 65 лет для мужчин).
                 .filter(education -> education.getEducation() == Education.HIGHER)
-                .filter(age -> age.getAge() > 18)
-                .filter(sex -> sex.getSex() == Sex.MAN || sex.getAge() < 60)
-                .filter(sex -> sex.getSex() == Sex.WOMAN || sex.getAge() < 65)
+                .filter(person -> {
+                    if (person.getSex() == Sex.WOMAN) {
+                        return person.getAge() < 60;
+                    } else if (person.getSex() == Sex.MAN) {
+                        return person.getAge() < 65;
+                    }
+                    return true;
+                })
+//                .filter(sex -> sex.getSex() == Sex.MAN)
+//                .filter(age -> age.getAge() > 65)
+//                .filter(sex -> sex.getSex() == Sex.WOMAN || sex.getAge() < 60)
                 .map(Person::getFamily)
                 .collect(Collectors.toList());
         System.out.println(workable);
